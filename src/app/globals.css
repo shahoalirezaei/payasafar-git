@@ -1,0 +1,258 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+:root {
+  /* gradients */
+  --btn-orang-bg: linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.05),
+      rgba(255, 255, 255, 0.05)
+    ),
+    radial-gradient(66.67% 103.95% at 50% -42.76%, #f4d7a5 0%, #ff9a0d 100%);
+
+  --btn-blue-bg: linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.05),
+      rgba(255, 255, 255, 0.05)
+    ),
+    radial-gradient(
+      66.67% 103.95% at 50% -42.76%,
+      var(--color-blue-300) 0%,
+      var(--color-blue-600) 100%
+    );
+
+  /* colors */
+  --color-page-bg: rgba(252, 253, 255, 1);
+  --color-blue-300: #a5c7f4;
+  --color-blue-600: #335fd6;
+  --color-text-primary: rgba(33, 46, 69, 1);
+  --color-text-blue: rgba(59, 143, 254, 1);
+  --color-accent-orange: rgba(252, 130, 32, 1);
+  --color-surface: rgba(255, 255, 255, 0.15);
+  --color-title-section:  #00113E;
+
+
+
+  /* shadows & borders */
+  --shadow-box: 0px 0px 32px 0px rgba(108, 120, 255, 0.07);
+
+  --shadow-soft-blue: 0px 0px 21.3px 14px rgba(108, 120, 255, 0.07);
+  --border-soft-white: 1px solid rgba(255, 255, 255, 0.15);
+
+  /* inputs */
+  --color-input-text: rgba(162, 162, 162, 1);
+  --color-input-bg: rgba(249, 249, 249, 1);
+  --shadow-input-inset: inset 4px 4px 4px rgba(232, 232, 232, 0.52);
+  --size-input-h: 41px;
+  --size-input-w: 323px;
+
+  /* container */
+  --container-padding: 1rem;
+  --container-padding-lg: 0.625rem;
+}
+
+html,
+body {
+  background-color: var(--color-page-bg);
+  font-family: var(--font-peyda), system-ui, -apple-system, sans-serif;
+   font-size: 14px;
+  color: var(--color-text-primary);
+  letter-spacing: normal;
+  box-sizing: border-box;
+  line-height: 28px;
+}
+
+
+a {
+  cursor: pointer;
+}
+
+.container {
+  @apply mx-auto px-4 md:px-2.5;
+}
+
+.black-text {
+  color: var(--color-text-primary);
+}
+
+.text-blue {
+  color: var(--color-text-blue);
+}
+
+.text-title {
+  color: var(--color-title-section)
+}
+
+.search-shadow {
+  box-shadow: 0px 0px 30.1px 50px rgba(108, 120, 255, 0.07);
+}
+
+.blue600 {
+  color: var(--color-blue-600);
+}
+
+.shadow-inner {
+  box-shadow: inset 0px 0px 32px 0px rgba(108, 120, 255, 0.07);
+}
+
+.box {
+  background-color: var(--color-white);
+  border: var(--border-soft-white);
+  color: var(--color-text-primary);
+}
+
+.shadow-soft-blue {
+  box-shadow: var(--shadow-soft-blue);
+}
+
+.background-blue {
+  background: var(--btn-blue-bg);
+}
+
+.text-orange {
+  color: var(--color-accent-orange);
+}
+
+.form-shadow {
+  box-shadow: 0 0 32px rgba(234, 243, 255, 0.9);
+}
+
+.bg-nanner {
+  background: linear-gradient(180deg, #64A9C3 3.86%, rgba(255, 255, 255, 0) 47.79%);
+
+}
+
+input:not(:placeholder-shown) + .floating-placeholder {
+  @apply opacity-0;
+}
+
+
+@layer components {
+  .bg-orange {
+  border: 1px solid transparent;
+  background: var(--btn-orang-bg);
+  color: white;
+  border-radius: 9999px; /* fully rounded */
+
+  box-shadow: 0px 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+/* box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1); */
+
+}
+
+
+/* globals.css */
+.btn-orange {
+  /* width: 1px; */
+  height: 35px;
+  padding: 0 12px 0 12px;
+  border-radius: 9999px; /* fully rounded */
+  border: 1px solid transparent;
+  gap: 6px;
+  background: var(--btn-orang-bg);
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0px 4px 6px -2px rgba(0, 0, 0, 0.05);
+  opacity: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-orange:hover {
+  transform: translateY(-2px);
+  box-shadow: 0px 12px 18px -4px rgba(0, 0, 0, 0.12),
+    0px 6px 8px -2px rgba(0, 0, 0, 0.05);
+}
+
+.big-btn-blue {
+  background: var(--btn-blue-bg); /* استفاده از متغیر CSS */
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0px 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+
+  .btn-blue {
+  width: 117px;
+  height: 37px;
+  border-radius: 9999px; /* fully rounded */
+  border: 1px solid transparent;
+  gap: 6px;
+  /* padding: 12px; */
+  background: var(--btn-blue-bg); /* استفاده از متغیر CSS */
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0px 4px 6px -2px rgba(0, 0, 0, 0.05);
+  opacity: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+  .btn-blue:hover {
+    transform: translateY(-2px);
+  }
+
+  .input-base {
+    background-color: var(--color-input-bg);
+    box-shadow: var(--shadow-input-inset);
+    height: 41px !important;
+    width: var(--size-input-w);
+    color: var(--color-input-text);
+    /* padding: 6px; */
+    /* border-radius: 0.5rem; */
+    /* padding-inline: 0.75rem; */
+    border-radius: 33px;
+    /* margin-bottom: 46px; */
+  }
+  /* کارت با شادو */
+  .card-shadow {
+    width: 282px;
+    height: 81px;
+    border-radius: 15px;
+    padding: 5px 26px; /* top/bottom = 5px, left/right = 26px */
+    gap: 10px;
+    background-color: var(--color-surface); /* از متغیر CSS */
+    box-shadow: var(--shadow-soft-blue); /* از متغیر CSS */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    opacity: 1;
+  }
+
+  /* برای اطمینان از اینکه دایره‌ها جای کافی دارند و روی کارت نمی‌افتند */
+.swiper-pagination {
+  bottom: 0px !important; /* فاصله از کف کادر اسلایدر */
+  height: 20px !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+/* بزرگتر کردن دایره‌ها برای لمس راحت‌تر در موبایل */
+.swiper-pagination-bullet {
+  width: 10px !important;
+  height: 10px !important;
+  margin: 0 5px !important;
+}
+}
+
+@layer utilities {
+  /* سایه کوچک‌تر - معمولاً برای حالت عادی دکمه یا کارت */
+  .shadow-soft-sm {
+    box-shadow: 0px 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+
+  /* سایه بزرگ‌تر - برای حالت هور یا المان‌های برجسته مثل دکمه فعال */
+  .shadow-soft-lg {
+    box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+  }
+}
