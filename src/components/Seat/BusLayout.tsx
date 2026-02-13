@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { useBookingStore } from "@/store/zustand/useBookingStore";
 
 // Helper برای مدیریت کلاس‌های Tailwind
 function cn(...inputs: ClassValue[]) {
@@ -25,6 +26,7 @@ interface Seat {
 }
 
 const BusLayout = () => {
+  const { selectedSeats, toggleSeat } = useBookingStore();
   // دیتای نمونه بر اساس تصویر (ترکیب صندلی‌های تک و جفت)
   const [seats, setSeats] = useState<Seat[][]>([
     // ردیف اول
@@ -90,23 +92,30 @@ const BusLayout = () => {
   ]);
 
   const handleSeatClick = (seat: Seat) => {
-    if (
-      seat.status === "BookedForMale" ||
-      seat.status === "BookedForFemale" ||
-      seat.status === "Empty"
-    )
-      return;
+  if (["BookedForMale", "BookedForFemale", "Empty", "SoldOut"].includes(seat.status)) return;
+  
+  // استفاده از تابع استور به جای کنسول لاگ ساده
+  toggleSeat(seat.number);
+};
 
-    // منطق انتخاب صندلی
-    console.log(`صندلی شماره ${seat.number} انتخاب شد`);
-  };
+  // const handleSeatClick = (seat: Seat) => {
+  //   if (
+  //     seat.status === "BookedForMale" ||
+  //     seat.status === "BookedForFemale" ||
+  //     seat.status === "Empty"
+  //   )
+  //     return;
+
+  //   // منطق انتخاب صندلی
+  //   console.log(`صندلی شماره ${seat.number} انتخاب شد`);
+  // };
 
   return (
     <div
-      className="flex flex-col items-center justify-center min-h-screen  p-4"
+      className="flex flex-col items-center justify-center"
     >
       {/* Container اصلی اتوبوس */}
-      <div className="relative bg-white  order-2 md:order-1 border-l border-[#E7E7E7] rounded-[20px] pl-[29px] py-[14px] pr-6 md:pl-[21px] md:py-[17px] md:pr-5 shadow-box w-[363px] md:w-[246px]">
+      <div className="relative bg-white  order-2 md:order-1 border-l border-[#E7E7E7] rounded-[20px] pl-[29px] py-[14px] pr-6 md:pl-[21px] md:py-[17px] md:pr-5 shadow-box w-[363px] md:w-[276px]">
         
         
 
@@ -146,15 +155,14 @@ const BusLayout = () => {
                   "h-full w-full rounded-[6px] flex items-center justify-center text-[14px] transition-all duration-200 font-semibold ",
                   // استایل صندلی بر اساس وضعیت
                   seat.status === "Available" &&
-                    "bg-[#F3F3F3] text-[#7A7A7A] hover:bg-gray-100",
+                    "bg-[#F3F3F3] text-[#7A7A7A] hover:bg-orange-200",
                   seat.status === "BookedForMale" &&
                     "bg-[#A5C7F4] text-black cursor-not-allowed",
                   seat.status === "BookedForFemale" &&
                     "bg-[#B1EBFF] text-black cursor-not-allowed",
                   seat.status === "SoldOut" &&
                     "bg-[#DF9292] text-black cursor-not-allowed",
-                  seat.status === "Selected" &&
-                    "bg-[#FFB37F] text-black",
+                  selectedSeats.includes(seat.number) && "bg-[#FFB37F] text-black"
                 )}
               >
                 {seat.status === "BookedForMale"

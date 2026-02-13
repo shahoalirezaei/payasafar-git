@@ -4,15 +4,19 @@ import { create } from 'zustand';
 interface BookingState {
   currentStep: number;
   ticketData: any; // تایپ مربوط به بلیط
-  selectedSeat: number | null;
+  selectedSeats: number[];
   setStep: (step: number) => void;
-  setSeat: (seatId: number) => void;
+  toggleSeat: (seatId: number) => void;
 }
 
 export const useBookingStore = create<BookingState>((set) => ({
-  currentStep: 1,
+  currentStep: 2,
   ticketData: null,
-  selectedSeat: null,
+  selectedSeats: [],
   setStep: (step) => set({ currentStep: step }),
-  setSeat: (seatId) => set({ selectedSeat: seatId }),
+  toggleSeat: (seatId) => set((state) => ({
+    selectedSeats: state.selectedSeats.includes(seatId)
+      ? state.selectedSeats.filter(id => id !== seatId) // حذف اگر قبلاً بود
+      : [...state.selectedSeats, seatId] // اضافه کردن اگر نبود
+  })),
 }));

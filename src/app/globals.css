@@ -70,7 +70,7 @@ a {
 }
 
 .container {
-  @apply mx-auto px-4 md:px-2.5;
+  @apply px-4 md:px-4;
 }
 
 .black-text {
@@ -212,6 +212,14 @@ input:not(:placeholder-shown) + .floating-placeholder {
     /* padding-inline: 0.75rem; */
     border-radius: 33px;
     /* margin-bottom: 46px; */
+  }
+
+  .form-input {
+    background-color: var(--color-input-bg);
+    box-shadow: var(--shadow-input-inset);
+    height: 41px !important;
+    color: var(--color-input-text);
+    border-radius: 33px;
   }
   /* کارت با شادو */
   .card-shadow {
