@@ -9,8 +9,7 @@ export default function PublicLayout({
 }) {
   return (
     <div>
-      
-      
+
       {/* محتوای اصلی هر صفحه (page.tsx ها) اینجا رندر می‌شوند */}
       <main >
         {children}
@@ -18,6 +17,7 @@ export default function PublicLayout({
 
       {/* فوتر سایت */}
       <Footer />
+      
     </div>
   );
 }

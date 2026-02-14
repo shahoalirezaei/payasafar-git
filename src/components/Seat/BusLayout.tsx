@@ -115,7 +115,7 @@ const BusLayout = () => {
       className="flex flex-col items-center justify-center"
     >
       {/* Container اصلی اتوبوس */}
-      <div className="relative bg-white  order-2 md:order-1 border-l border-[#E7E7E7] rounded-[20px] pl-[29px] py-[14px] pr-6 md:pl-[21px] md:py-[17px] md:pr-5 shadow-box w-[363px] md:w-[276px]">
+      <div className="relative bg-white border-l border-[#E7E7E7] rounded-[20px] pl-[29px] py-[14px] pr-6 md:pl-[21px] md:py-[17px] md:pr-5 shadow-box w-[363px] md:w-[276px]">
         
         
 

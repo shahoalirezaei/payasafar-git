@@ -107,6 +107,13 @@ a {
   box-shadow: var(--shadow-soft-blue);
 }
 
+.bg-back-gradient {
+  background:
+    linear-gradient(0deg, rgba(255,255,255,0.05), rgba(255,255,255,0.05)),
+    radial-gradient(66.67% 103.95% at 50% -42.76%, #FFFFFF 0%, #ABABAB 100%);
+}
+
+
 .background-blue {
   background: var(--btn-blue-bg);
 }

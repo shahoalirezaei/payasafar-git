@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { peyda } from "@/lib/fonts";
 import "./globals.css"
 import Header from "@/components/Global/Header";
+import GlobalDatePicker from "@/components/ui/GlobalDatePicker";
 
 export default function RootLayout({
   children,
@@ -19,6 +20,7 @@ export default function RootLayout({
       
 
         {children}
+        <GlobalDatePicker />
       
         </div>
         </body>

@@ -1,12 +1,15 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, use, useMemo } from "react";
 import { useSearchStore } from "@/store/zustand/search.store";
-import { useCities } from "@/hooks/useCities"; // هوک خودتان
+import moment from "jalali-moment";
+import { useCities } from "@/hooks/useCities"; 
 import { FlagIcon } from "@heroicons/react/16/solid";
 import { MapPinIcon } from "@heroicons/react/20/solid";
 import { CalendarDays } from "lucide-react";
 import Image from "next/image";
+import PersianDatePicker from "../ui/PersianDatePicker";
+import { useCalendarStore } from "@/store/zustand/useCalendarStore";
 
 export default function BusSearch() {
   // 1. دریافت استیت و متدها از Zustand
@@ -25,6 +28,9 @@ const source = bus.origin;
 
   // 2. دریافت لیست شهرها از هوک دیتا
   const { cities, isLoading } = useCities();
+
+  // تقویم
+  const { setCalendarOpen, selectedDate,setSelectedDate } = useCalendarStore();
 
   // 3. استیت‌های لوکال برای نمایش دراپ‌داون
   const [showSourceList, setShowSourceList] = useState(false);
@@ -56,6 +62,48 @@ const source = bus.origin;
     );
   };
 
+  // ===============================
+    // 📅 helpers
+    // ===============================
+  
+    const todayMoment = useMemo(
+      () => moment().startOf("day"),
+      []
+    );
+  
+    function isDisabled(m: moment.Moment) {
+      return m.isBefore(todayMoment, "day");
+    }
+  
+    function isSameDay(a?: Date | null, b?: moment.Moment) {
+      if (!a || !b) return false;
+      return moment(a).isSame(b, "day");
+    }
+
+    const formattedInput = useMemo(() => {
+      if (!selectedDate) return "";
+      return moment(selectedDate).format("jYYYY/jMM/jDD");
+    }, [selectedDate]);
+  
+    const dayOfWeek = useMemo(() => {
+      if (!selectedDate) return "";
+      return moment(selectedDate).format("dddd");
+    }, [selectedDate]);
+  
+    const relativeText = useMemo(() => {
+      if (!selectedDate) return "";
+  
+      const diff = moment(selectedDate)
+        .startOf("day")
+        .diff(todayMoment, "days");
+  
+      if (diff === 0) return "امروز";
+      if (diff === 1) return "فردا";
+      if (diff > 1) return `${diff} روز بعد`;
+      if (diff === -1) return "دیروز";
+      return `${Math.abs(diff)} روز قبل`;
+    }, [selectedDate, todayMoment]);
+
   return (
     <>
       {/* --- Header Decoration --- */}
@@ -86,7 +134,7 @@ const source = bus.origin;
 
       {/* --- Main Inputs Container --- */}
       {/* z-index 20 مهم است تا لیست روی تقویم بیفتد */}
-      <div className="relative input-base mb-[46px] flex justify-between z-20"> 
+      <div className="relative input-base !h-[41px] mb-[46px] flex justify-between z-20"> 
         
         {/* Divider */}
         <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-[41px] w-px bg-gray-400" />
@@ -100,7 +148,7 @@ const source = bus.origin;
         </div>
 
         {/* --- ORIGIN (مبدا) --- */}
-        <div className="relative w-full flex items-center" ref={sourceRef}>
+        <div className="relative w-full flex items-center h-[41px]" ref={sourceRef}>
           <input
             type="text"
             placeholder=" "
@@ -145,7 +193,7 @@ const source = bus.origin;
         </div>
 
         {/* --- DESTINATION (مقصد) --- */}
-        <div className="relative w-full flex items-center" ref={destRef}>
+        <div className="relative w-full flex items-center h-[41px]" ref={destRef}>
           <input
             type="text"
             placeholder=" "
@@ -203,10 +251,13 @@ const source = bus.origin;
                   text-sm
                   rounded-xl
                   outline-none
-                  text-gray-400
+                  text-black
                   focus:text-black
                   pr-3 pl-10
                 "
+                value={selectedDate
+          ? `${formattedInput} (${dayOfWeek}، ${relativeText})`
+          : ""}
                 />
       
                 <div
@@ -225,6 +276,10 @@ const source = bus.origin;
       
                 {/* Calendar icon */}
                 <div
+                onClick={(e) => {
+        e.stopPropagation(); // جلوگیری از تداخل کلیک
+        setCalendarOpen(true);
+      }}
                   className="
                   absolute left-[10px] top-1/2 -translate-y-1/2
                   bg-orange
@@ -242,7 +297,10 @@ const source = bus.origin;
         <button className="btn-blue" onClick={() => console.log(source, destination)}>
             جستجو بلیط
         </button>
+
+        
       </div>
+      
     </>
   );
 }

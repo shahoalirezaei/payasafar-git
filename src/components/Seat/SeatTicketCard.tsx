@@ -38,7 +38,7 @@ const SeatTicketCard: React.FC<SeatTicketCardProps> = ({
         MOBILE VIEW (Visible on small screens)
         ========================================
       */}
-      <div className="block md:hidden  bg-white rounded-[10px] shadow-box mx-[18px]">
+      <div className="block md:hidden w-full bg-white rounded-[10px] shadow-box md:mx-[18px]">
         <div className="pt-4 pb-[10px]">
           {/* Header: Company Info & Price */}
           <div className="flex justify-between pr-[19px] pl-[17px]">
