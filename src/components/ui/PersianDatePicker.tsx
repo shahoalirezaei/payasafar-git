@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation"; // 1. ایمپورت روتر
 import moment from "jalali-moment";
 import { useCalendarStore } from "@/store/zustand/useCalendarStore";
 import { JALALI_HOLIDAYS } from "@/lib/data/jalaliHolidays";
@@ -16,6 +17,7 @@ function cn(...inputs: any[]) {
 const WEEKDAYS = ["ش", "ی", "د", "س", "چ", "پ", "ج"];
 
 export default function PersianDatePicker() {
+  const router = useRouter(); // 2. تعریف روتر
   const { isCalendarOpen, setCalendarOpen, selectedDate, setSelectedDate } =
     useCalendarStore();
   const bus = useSearchStore((state) => state.bus);
@@ -52,6 +54,33 @@ export default function PersianDatePicker() {
     if (!a || !b) return false;
     return moment(a).isSame(b, "day");
   }
+
+  // ===============================
+  // 🚀 Logic: Handle Search Button (مشاهده بلیط)
+  // ===============================
+  const handleSearch = () => {
+    // اگر تاریخ یا شهرها انتخاب نشده باشند، کاری نکن
+    if (!selectedDate || !bus.origin.code || !bus.destination.code) {
+      return;
+    }
+
+    // 1. ساخت Slug (tehran-esfahan)
+    const originSlug = bus.origin.etitle.trim().toLowerCase().replace(/\s+/g, '-');
+    const destSlug = bus.destination.etitle.trim().toLowerCase().replace(/\s+/g, '-');
+    
+    // اگر نام انگلیسی نداشتیم (محض احتیاط)، از همان تایتل فارسی استفاده نکنیم تا URL خراب نشود
+    // اما چون در سرچ‌باکس هندل کردیم، اینجا فرض بر صحت دیتا است.
+    const routeSlug = `${originSlug}-${destSlug}`;
+
+    // 2. فرمت تاریخ شمسی (1404-11-28)
+    const jalaliDate = moment(selectedDate).format("jYYYY-jMM-jDD");
+
+    // 3. بستن تقویم
+    setCalendarOpen(false);
+
+    // 4. هدایت کاربر
+    router.push(`/bus/${routeSlug}?departing=${jalaliDate}`);
+  };
 
   // ===============================
   // 🧱 build grid (مثل vue تو)
@@ -193,7 +222,7 @@ export default function PersianDatePicker() {
             </div>
             { (bus.origin.title && bus.destination.title) ? (
               <div className="bg-white flex flex-col md:flex-row justify-between items-center md:gap-10  w-full rounded-t-[35px] sticky z-10 bottom-0 md:rounded-b-[21px] md:rounded-t-none  right-0 shadow-[0px -30px 38.1px 0px rgba(64, 64, 64, 0.17)] py-7 pr-9 pl-6">
-              <div className="flex justify-between md:w-1/2  md:order-2">
+              <div className="flex justify-between w-full md:w-1/2  md:order-2">
                 <div className="flex flex-col ">
                   <span className="text-[#445C9D] text-[12px] font-semibold">
                     مسیر انتخاب شده:
@@ -225,7 +254,11 @@ export default function PersianDatePicker() {
                 </div>
               </div>
               <div className="pt-5 px-5 mt-auto w-full md:w-1/3 md:p-0  bg-white  md:order-0">
-                <button className="w-full py-4 big-btn-blue text-white rounded-[10px] font-semibold flex justify-center items-center gap-1.5  active:scale-[0.98] transition-transform">
+                {/* 3. دکمه متصل به تابع handleSearch */}
+                <button 
+                    onClick={handleSearch}
+                    className="w-full py-4 big-btn-blue text-white rounded-[10px] font-semibold flex justify-center items-center gap-1.5  active:scale-[0.98] transition-transform"
+                >
                   <Icon
                     name="solar--arrow-left-broken"
                     className=" rotate-180"

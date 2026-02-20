@@ -1,42 +1,40 @@
 "use client";
 
-import { useEffect, useState, useRef, use, useMemo } from "react";
-import { useSearchStore } from "@/store/zustand/search.store";
+import { useEffect, useState, useRef, useMemo } from "react";
+import { useRouter } from "next/navigation"; 
+import { useSearchStore } from "@/store/zustand/search.store"; 
 import moment from "jalali-moment";
 import { useCities } from "@/hooks/useCities"; 
 import { FlagIcon } from "@heroicons/react/16/solid";
 import { MapPinIcon } from "@heroicons/react/20/solid";
 import { CalendarDays } from "lucide-react";
 import Image from "next/image";
-import PersianDatePicker from "../ui/PersianDatePicker";
 import { useCalendarStore } from "@/store/zustand/useCalendarStore";
 
 export default function BusSearch() {
+  const router = useRouter();
+
   // 1. دریافت استیت و متدها از Zustand
   const { 
-    bus,                 // دسترسی به آبجکت bus که شامل origin و destination است
-    setBusOrigin,        // تابع جدید برای تنظیم مبدا
-    setBusDestination,   // تابع جدید برای تنظیم مقصد
-    swapBusLocations     // تابع جدید برای جابجایی
+    bus,             
+    setBusOrigin,    
+    setBusDestination, 
+    swapBusLocations 
   } = useSearchStore();
 
-const source = bus.origin;
+  const source = bus.origin;
   const destination = bus.destination;
-  const setSource = setBusOrigin;
-  const setDestination = setBusDestination;
   const swapLocations = swapBusLocations;
 
-  // 2. دریافت لیست شهرها از هوک دیتا
+  // 2. دریافت لیست شهرها (از سرویس اصلاح شده) و تقویم
   const { cities, isLoading } = useCities();
-
-  // تقویم
-  const { setCalendarOpen, selectedDate,setSelectedDate } = useCalendarStore();
+  const { setCalendarOpen, selectedDate } = useCalendarStore();
 
   // 3. استیت‌های لوکال برای نمایش دراپ‌داون
   const [showSourceList, setShowSourceList] = useState(false);
   const [showDestList, setShowDestList] = useState(false);
 
-  // 4. رفرنس برای بستن لیست با کلیک بیرون
+  // 4. رفرنس برای بستن لیست
   const sourceRef = useRef<HTMLDivElement>(null);
   const destRef = useRef<HTMLDivElement>(null);
 
@@ -53,62 +51,103 @@ const source = bus.origin;
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // تابع کمکی برای فیلتر کردن
+  // تابع کمکی فیلتر
   const getFilteredCities = (query: string) => {
     if (!cities) return [];
     if (!query) return cities;
     return cities.filter(
-      (c) => c.title.includes(query) || c.etitle?.toLowerCase().includes(query.toLowerCase())
+      (c) => c.title.includes(query) || (c.etitle && c.etitle.toLowerCase().includes(query.toLowerCase()))
     );
   };
 
-  // ===============================
-    // 📅 helpers
-    // ===============================
-  
-    const todayMoment = useMemo(
-      () => moment().startOf("day"),
-      []
-    );
-  
-    function isDisabled(m: moment.Moment) {
-      return m.isBefore(todayMoment, "day");
+  // 5. هلپرهای تقویم
+  const todayMoment = useMemo(() => moment().startOf("day"), []);
+
+  const formattedInput = useMemo(() => {
+    if (!selectedDate) return "";
+    return moment(selectedDate).format("jYYYY/jMM/jDD");
+  }, [selectedDate]);
+
+  const dayOfWeek = useMemo(() => {
+    if (!selectedDate) return "";
+    return moment(selectedDate).format("dddd");
+  }, [selectedDate]);
+
+  const relativeText = useMemo(() => {
+    if (!selectedDate) return "";
+    const diff = moment(selectedDate).startOf("day").diff(todayMoment, "days");
+    if (diff === 0) return "امروز";
+    if (diff === 1) return "فردا";
+    if (diff > 1) return `${diff} روز بعد`;
+    if (diff === -1) return "دیروز";
+    return `${Math.abs(diff)} روز قبل`;
+  }, [selectedDate, todayMoment]);
+
+  // 6. تابع جستجو
+  const handleSearch = () => {
+    if (!source.code || !destination.code) {
+      alert("لطفا شهر مبدا و مقصد را از لیست انتخاب کنید.");
+      return;
     }
-  
-    function isSameDay(a?: Date | null, b?: moment.Moment) {
-      if (!a || !b) return false;
-      return moment(a).isSame(b, "day");
+    if (!selectedDate) {
+      alert("لطفا تاریخ سفر را انتخاب کنید.");
+      return;
     }
 
-    const formattedInput = useMemo(() => {
-      if (!selectedDate) return "";
-      return moment(selectedDate).format("jYYYY/jMM/jDD");
-    }, [selectedDate]);
-  
-    const dayOfWeek = useMemo(() => {
-      if (!selectedDate) return "";
-      return moment(selectedDate).format("dddd");
-    }, [selectedDate]);
-  
-    const relativeText = useMemo(() => {
-      if (!selectedDate) return "";
-  
-      const diff = moment(selectedDate)
-        .startOf("day")
-        .diff(todayMoment, "days");
-  
-      if (diff === 0) return "امروز";
-      if (diff === 1) return "فردا";
-      if (diff > 1) return `${diff} روز بعد`;
-      if (diff === -1) return "دیروز";
-      return `${Math.abs(diff)} روز قبل`;
-    }, [selectedDate, todayMoment]);
+    // ساخت اسلاگ و تاریخ برای URL
+    const originSlug = source.etitle.trim().toLowerCase().replace(/\s+/g, '-');
+    const destSlug = destination.etitle.trim().toLowerCase().replace(/\s+/g, '-');
+    const routeSlug = `${originSlug}-${destSlug}`;
+    const jalaliDate = moment(selectedDate).format("jYYYY-jMM-jDD");
+
+    router.push(`/bus/${routeSlug}?departing=${jalaliDate}`);
+  };
+
+  // 7. هندلرها
+  const handleSelectOrigin = (city: any) => {
+    setBusOrigin({
+        id: city.id,
+        title: city.title,
+        code: city.code,
+        etitle: city.etitle || ""
+    });
+    setShowSourceList(false);
+  };
+
+  const handleSelectDestination = (city: any) => {
+    setBusDestination({
+        id: city.id,
+        title: city.title,
+        code: city.code,
+        etitle: city.etitle || ""
+    });
+    setShowDestList(false);
+  };
+
+  const handleOriginInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+     setBusOrigin({
+         ...source,
+         title: e.target.value,
+         code: null,
+         etitle: ""
+     });
+     setShowSourceList(true);
+  };
+
+  const handleDestInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setBusDestination({
+        ...destination,
+        title: e.target.value,
+        code: null,
+        etitle: ""
+    });
+    setShowDestList(true);
+ };
 
   return (
     <>
       {/* --- Header Decoration --- */}
       <div className="h-[21px] mt-[57px] mb-5 flex w-[298px] items-center justify-between">
-         {/* قسمت‌های گرافیکی بالای فرم (بدون تغییر) */}
          <div className="flex items-center text-[#D9D9D9] justify-between gap-[6.5px]">
           <span className={source.title ? "text-orange" : ""}>
             <MapPinIcon className="w-4 h-4 p-0" />
@@ -133,7 +172,6 @@ const source = bus.origin;
       </div>
 
       {/* --- Main Inputs Container --- */}
-      {/* z-index 20 مهم است تا لیست روی تقویم بیفتد */}
       <div className="relative input-base !h-[41px] mb-[46px] flex justify-between z-20"> 
         
         {/* Divider */}
@@ -154,10 +192,7 @@ const source = bus.origin;
             placeholder=" "
             value={source.title}
             onFocus={() => setShowSourceList(true)}
-            onChange={(e) => {
-              setSource(e.target.value, null); // کد نال می‌شود چون دستی تایپ شده
-              setShowSourceList(true);
-            }}
+            onChange={handleOriginInputChange}
             className="peer w-full px-3 text-sm rounded-xl outline-none border-none bg-inherit text-black placeholder-transparent"
           />
           <div className={`floating-placeholder pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 flex gap-1 text-gray-400 text-xs transition-opacity ${source.title ? "opacity-0" : "opacity-100"}`}>
@@ -176,10 +211,7 @@ const source = bus.origin;
                     <li
                       key={city.id}
                       className="px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 cursor-pointer border-b last:border-none border-gray-50"
-                      onClick={() => {
-                        setSource(city.title, city.code);
-                        setShowSourceList(false);
-                      }}
+                      onClick={() => handleSelectOrigin(city)}
                     >
                       {city.title}
                     </li>
@@ -199,10 +231,7 @@ const source = bus.origin;
             placeholder=" "
             value={destination.title}
             onFocus={() => setShowDestList(true)}
-            onChange={(e) => {
-              setDestination(e.target.value, null);
-              setShowDestList(true);
-            }}
+            onChange={handleDestInputChange}
             className="peer w-full bg-inherit text-sm rounded-xl outline-none border-none text-black focus:text-black pl-3 mr-2.5 pr-5"
           />
           <div className={`floating-placeholder pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 flex gap-1 pr-5 text-gray-400 text-xs transition-opacity ${destination.title ? "opacity-0" : "opacity-100"}`}>
@@ -221,10 +250,7 @@ const source = bus.origin;
                     <li
                       key={city.id}
                       className="px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 cursor-pointer border-b last:border-none border-gray-50"
-                      onClick={() => {
-                        setDestination(city.title, city.code);
-                        setShowDestList(false);
-                      }}
+                      onClick={() => handleSelectDestination(city)}
                     >
                       {city.title}
                     </li>
@@ -238,12 +264,17 @@ const source = bus.origin;
         </div>
       </div>
 
-      {/* --- Date Picker (بدون تغییر) --- */}
+      {/* --- Date Picker --- */}
       <div className="input-base mb-[46px] relative flex items-center">
               <div className="relative w-full ">
                 <input
                   type="text"
                   placeholder=" "
+                  readOnly
+                  onClick={(e) => {
+                      e.stopPropagation();
+                      setCalendarOpen(true);
+                  }}
                   className="
                   peer
                   w-full
@@ -254,6 +285,7 @@ const source = bus.origin;
                   text-black
                   focus:text-black
                   pr-3 pl-10
+                  cursor-pointer
                 "
                 value={selectedDate
           ? `${formattedInput} (${dayOfWeek}، ${relativeText})`
@@ -261,31 +293,33 @@ const source = bus.origin;
                 />
       
                 <div
-                  className="
+                  className={`
                   floating-placeholder
                   pointer-events-none
                   absolute right-3 top-1/2 -translate-y-1/2
                   flex gap-1
                   text-gray-400 text-xs
                   transition-opacity
-                "
+                  ${selectedDate ? "opacity-0" : "opacity-100"} 
+                  `}
                 >
-                  <span className="font-semibold">1403/11/28</span>
-                  <span className="font-light">(یکشنبه، امروز)</span>
+                  <span className="font-semibold">تاریخ سفر</span>
+                  <span className="font-light">(انتخاب کنید)</span>
                 </div>
       
                 {/* Calendar icon */}
                 <div
-                onClick={(e) => {
-        e.stopPropagation(); // جلوگیری از تداخل کلیک
-        setCalendarOpen(true);
-      }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setCalendarOpen(true);
+                  }}
                   className="
                   absolute left-[10px] top-1/2 -translate-y-1/2
                   bg-orange
                   flex items-center justify-center
                   w-[25px] h-[25px]
                   rounded-full
+                  cursor-pointer
                 "
                 >
                   <CalendarDays className="w-[15px] h-[15px] text-white" />
@@ -294,13 +328,10 @@ const source = bus.origin;
             </div>
 
       <div className="absolute left-1/2 -bottom-[20px] -translate-x-1/2">
-        <button className="btn-blue" onClick={() => console.log(source, destination)}>
+        <button className="btn-blue" onClick={handleSearch}>
             جستجو بلیط
         </button>
-
-        
       </div>
-      
     </>
   );
 }

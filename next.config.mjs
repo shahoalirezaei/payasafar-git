@@ -1,12 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  async rewrites() {
-    return [
-      {
-        source: '/api-proxy/:path*', // ما به این آدرس درخواست می‌زنیم
-        destination: 'http://test.payasafar.com/api/:path*', // نکست جی‌اس مخفیانه به اینجا می‌فرستد
-      },
-    ]
+  reactStrictMode: false,
+  // اگر تنظیمات عکس یا چیز دیگری دارید نگه دارید، ولی rewrites را پاک کنید
+  images: {
+    domains: ['api.test.payasafar.com'], // اگر نیاز است
   },
 };
 

@@ -8,10 +8,10 @@ export default function PublicLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div>
+    <div className="flex flex-col min-h-screen">
 
       {/* محتوای اصلی هر صفحه (page.tsx ها) اینجا رندر می‌شوند */}
-      <main >
+      <main className="flex-grow" >
         {children}
       </main>
 

@@ -1,3 +1,5 @@
+// src/components/Bus/MobileBottomBar.tsx
+"use client"
 import React from "react";
 import Icon from "../ui/Icon";
 import Image from "next/image";

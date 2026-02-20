@@ -27,6 +27,89 @@ interface Seat {
 
 const BusLayout = () => {
   const { selectedSeats, toggleSeat } = useBookingStore();
+  // const [seats30, setSeats30] = useState<Seat[][]>([
+  //   // ستون اول
+  //   [
+  //     { id: 1, number: 1, status: "Available" },
+  //     { id: 2, number: 4, status: "BookedForMale" },
+  //     { id: 3, number: 7, status: "Available" },
+  //     { id: 4, number: 10, status: "Available" },
+  //     { id: 5, number: 0, status: "Empty" },
+  //     { id: 6, number: 0, status: "Empty"},
+  //     { id: 7, number: 0, status: "Empty"}, 
+  //     { id: 8, number: 16, status: "BookedForMale" },
+  //     { id: 9, number: 19, status: "BookedForMale" },
+  //     { id: 10, number: 22, status: "BookedForMale" },
+  //     { id: 11, number: 25, status: "BookedForMale" },
+  //     { id: 12, number: 28, status: "BookedForMale" },
+     
+  //   ],
+  //   // ستون دوم
+  //   [
+  //     { id: 13, number: 2, status: "BookedForMale" },
+  //     { id: 14, number: 5, status: "Available" },
+  //     { id: 15, number: 8, status: "Available" },
+  //     { id: 16, number: 11, status: "BookedForFemale" },
+  //     { id: 17, number: 0, status: "Empty" },
+  //     { id: 18, number: 0, status: "Empty"},
+  //     { id: 19, number: 0, status: "Empty"}, 
+  //     { id: 20, number: 17, status: "BookedForMale" },
+  //     { id: 21, number: 20, status: "BookedForMale" },
+  //     { id: 22, number: 23, status: "Available" },
+  //     { id: 23, number: 26, status: "Available" },
+  //     { id: 24, number: 29, status: "BookedForMale" },
+  //   ],
+  //   // ستون سوم
+  //   [
+      
+  //     { id: 25, number: 0, status: "Empty" },
+  //     { id: 26, number: 0, status: "Empty" },
+  //     { id: 27, number: 0, status: "Empty" },
+  //     { id: 28, number: 0, status: "Empty" },
+  //     { id: 29, number: 0, status: "Empty" },
+  //     { id: 30, number: 0, status: "Empty" },
+  //     { id: 31, number: 0, status: "Empty" },
+  //     { id: 32, number: 0, status: "Empty" },
+  //     { id: 33, number: 0, status: "Empty" },
+  //     { id: 34, number: 0, status: "Empty" },
+  //     { id: 35, number: 0, status: "Empty" },
+  //     { id: 36, number: 0, status: "Empty" },
+      
+  //   ],
+  //   //ستون چهارم
+  //   [
+      
+  //     { id: 37, number: 0, status: "Empty" },
+  //     { id: 38, number: 0, status: "Empty" },
+  //     { id: 39, number: 0, status: "Empty" },
+  //     { id: 40, number: 0, status: "Empty" },
+  //     { id: 41, number: 0, status: "Empty" },
+  //     { id: 42, number: 0, status: "Empty" },
+  //     { id: 43, number: 0, status: "Empty" },
+  //     { id: 44, number: 0, status: "Empty" },
+  //     { id: 45, number: 0, status: "Empty" },
+  //     { id: 46, number: 0, status: "Empty" },
+  //     { id: 47, number: 0, status: "Empty" },
+  //     { id: 48, number: 0, status: "Empty" },
+      
+  //   ],
+  //   // ستون پنجم
+  //   [
+  //     { id: 49, number: 3, status: "Available" },
+  //     { id: 50, number: 6, status: "BookedForMale" },
+  //     { id: 51, number: 9, status: "Available" },
+  //     { id: 52, number: 12, status: "Available" },
+  //     { id: 53, number: 13, status: "Available" },
+  //     { id: 54, number: 14, status: "BookedForFemale"},
+  //     { id: 55, number: 15, status: "Available"}, 
+  //     { id: 56, number: 18, status: "BookedForMale" },
+  //     { id: 57, number: 21, status: "BookedForMale" },
+  //     { id: 58, number: 24, status: "BookedForFemale" },
+  //     { id: 59, number: 27, status: "BookedForMale" },
+  //     { id: 60, number: 30, status: "BookedForMale" },
+     
+  //   ],
+  // ]);
   // دیتای نمونه بر اساس تصویر (ترکیب صندلی‌های تک و جفت)
   const [seats, setSeats] = useState<Seat[][]>([
     // ردیف اول
@@ -115,7 +198,7 @@ const BusLayout = () => {
       className="flex flex-col items-center justify-center"
     >
       {/* Container اصلی اتوبوس */}
-      <div className="relative bg-white border-l border-[#E7E7E7] rounded-[20px] pl-[29px] py-[14px] pr-6 md:pl-[21px] md:py-[17px] md:pr-5 shadow-box w-[363px] md:w-[276px]">
+      <div className="relative bg-white border-l order-1 lg:order-2 border-[#E7E7E7] rounded-[20px] pl-[29px] py-[14px] pr-6 md:pl-[21px] md:py-[17px] md:pr-5 shadow-box w-[363px] md:w-[276px]">
         
         
 
@@ -177,24 +260,45 @@ const BusLayout = () => {
       </div>
 
       {/* راهنمای وضعیت‌ها */}
-      <div className="mt-[21px] mb-6 md:mt-3 md:grid md:grid-cols-2 flex flex-row  gap-2 text-[10px] font-medium w-[363px] md:w-[203px] mx-auto justify-between order-1 md:order-2">
-        <div className="flex items-center gap-[5px] lg:order-3">
-          <span className="w-[18px] h-[18px] bg-[#FFB37F] rounded-[5px]" />
-          <span>انتخاب شما</span>
-        </div>
-        <div className="flex items-center gap-[5px] lg:order-2">
-          <span className="w-[18px] h-[18px] bg-[#F3F3F3] rounded-[5px]" />
-          <span>قابل انتخاب</span>
-        </div>
-        <div className="flex items-center gap-[5px] lg:order-1">
-          <span className="w-[18px] h-[18px] bg-[linear-gradient(101.4deg,_#A5C7F4_50%,_#B1ECFF_50%)] rounded-[5px]" />
-          <span>رزرو شده </span>
-        </div>
-        <div className="flex items-center gap-[5px] lg:order-4">
-          <span className="w-[18px] h-[18px] bg-[#DF9292] rounded-[5px]" />
-          <span>غیرقابل انتخاب</span>
-        </div>
-      </div>
+      <div className="
+    mt-[21px] mb-6 
+    
+    /* 📱 حالت موبایل: فلکس (کنار هم) */
+    flex flex-row flex-wrap justify-between items-center gap-2
+    w-full max-w-[363px] mx-auto
+    
+    /* 🖥️ حالت دسکتاپ (lg): گرید (دو ستونه) */
+    lg:grid lg:grid-cols-2 lg:w-[203px] lg:gap-y-3 lg:gap-x-2
+    
+    text-[10px] font-medium 
+    order-2 lg:order-1
+">
+    
+    {/* آیتم ۱: انتخاب شما */}
+    <div className="flex items-center gap-[5px]">
+        <span className="w-[18px] h-[18px] bg-[#FFB37F] rounded-[5px]" />
+        <span>انتخاب شما</span>
+    </div>
+
+    {/* آیتم ۲: قابل انتخاب */}
+    <div className="flex items-center gap-[5px]">
+        <span className="w-[18px] h-[18px] bg-white border border-[#C7C7C7] rounded-[5px]" /> {/* اصلاح رنگ برای دیده شدن بهتر */}
+        <span>قابل انتخاب</span>
+    </div>
+
+    {/* آیتم ۳: رزرو شده */}
+    <div className="flex items-center gap-[5px]">
+        <span className="w-[18px] h-[18px] bg-[linear-gradient(101.4deg,_#A5C7F4_50%,_#B1ECFF_50%)] rounded-[5px]" />
+        <span>رزرو شده</span>
+    </div>
+
+    {/* آیتم ۴: غیرقابل انتخاب */}
+    <div className="flex items-center gap-[5px]">
+        <span className="w-[18px] h-[18px] bg-[#DF9292] rounded-[5px]" />
+        <span>غیرقابل انتخاب</span>
+    </div>
+
+</div>
     </div>
   );
 };
