@@ -1,26 +1,55 @@
 import apiBase from "@/lib/axios";
-import { ResultBase } from "@/types/trip.types";
+
+export interface ResultBase<T> {
+  status?: string;
+  code?: string;
+  message?: string;
+  data?: T;
+  payload?: T;
+  listPayload?: T[];
+  isSuccess?: boolean;
+}
 
 // ۱. اینترفیس اطلاعات هر مسافر
+// برای جلوگیری از ناسازگاری بین نسخه‌های مختلف مستند بک‌اند،
+// هر دو مدل نام‌گذاری را پوشش می‌دهیم.
 export interface PersonInfo {
-  firstName: string;
-  LastName: string; // دقت کنید در داکیومنت L بزرگ است
-  nationalCode: string;
-  gender: number; // 1 برای مرد، 2 برای زن
-  birthDate: string; // فرمت ISO یا رشته‌ای که سرور قبول می‌کند
+  name?: string;
+  firstName?: string;
+  lastName?: string;
+  LastName?: string;
+  Name?: string;
+  nationalCode?: string;
+  NationalCode?: string;
+  gender?: number;
+  Genders?: string;
+  genders?: string;
+  birthDate?: string;
+  BirthDay?: string;
+  brithDay?: string;
+  Foreign?: string;
+  foreign?: string;
+  Address?: string;
+  address?: string;
+  IsParent?: boolean;
+  isParent?: boolean;
 }
 
 // ۲. اینترفیس درخواست ثبت بلیت
 export interface SaleTicketRequest {
-  selectChaires: string; // صندلی‌ها با کاما: "1,2"
+  selectChaires: string; // نسخه رایج در بک‌اند فعلی
+  selectChairs?: string; // نسخه جایگزین در برخی مستندات
   busId: string;
   serviceId: string;
   tokenCompany: string;
-  sellerId?: number;
+  sellerId?: number | null;
   tripId: string;
+  sellerTicketId?: number | null;
+  userId?: number | null;
   srcCode: string;
   destCode: string;
   useCreditOnSafar724: boolean;
+  useCreditInSafar724?: boolean;
   mobileNumber: string;
   listPerson: PersonInfo[];
 }

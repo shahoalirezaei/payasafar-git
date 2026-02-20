@@ -1,0 +1,18 @@
+Booking & Payment Models
+
+Endpoints: POST /api/Buy/SaleTicketsNew GET /api/Profile/GetUserTickets
+GET /api/Profile/GetTicketInfo POST /api/Payment/SendRequestPayment
+
+SaleTicketRequest: { selectChairs: string; busId: string; serviceId:
+string; tokenCompany: string; sellerId: number; tripId: string;
+sellerTicketId: number; userId: number; srcCode: string; destCode:
+string; useCreditInSafar724: boolean; mobileNumber: string; listPerson:
+PersonInfo[]; }
+
+TicketStatus: -1 None 0 Temp 1 Approved 2 Declined 3 Error 4 Canceled 5
+SentToMerchant 6 PaidBack
+
+SendRequestPaymentRequest: { price: number; }
+
+RequestPayment Response: { token: string; url: string; getMethod:
+string; method: string; formName: string; }

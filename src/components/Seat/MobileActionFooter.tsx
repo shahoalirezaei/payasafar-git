@@ -1,15 +1,22 @@
 "use client";
 import React from "react";
-import Link from "next/link";
 import { useBookingStore } from "@/store/zustand/useBookingStore";
 import Icon from "@/components/ui/Icon";
 import { SeatIcon } from "../ui/StepperIcons";
 
 interface MobileActionFooterProps {
   pricePerSeat: number;
+  onContinueProcess?: () => void | Promise<void>;
+  isSubmitting?: boolean;
+  submitError?: string;
 }
 
-const MobileActionFooter = ({ pricePerSeat }: MobileActionFooterProps) => {
+const MobileActionFooter = ({
+  pricePerSeat,
+  onContinueProcess,
+  isSubmitting = false,
+  submitError = "",
+}: MobileActionFooterProps) => {
   const { selectedSeats, currentStep, setStep , isMobileFormOpen, setMobileFormOpen } =
     useBookingStore();
 
@@ -91,18 +98,23 @@ const MobileActionFooter = ({ pricePerSeat }: MobileActionFooterProps) => {
         /* ================================================= */
         /* حالت دوم: فقط دکمه ادامه (بعد از زدن دکمه) */
         /* ================================================= */
-        <div className="w-full">
-          <Link
-            href="/checkout"
-            className="w-full big-btn-blue h-[58px] rounded-[10px] text-white font-semibold text-[20px] flex items-center justify-center gap-2 shadow-box  active:scale-[0.98] transition-transform"
+        <div className="w-full flex flex-col">
+          <button
+            type="button"
+            onClick={onContinueProcess}
+            disabled={isSubmitting}
+            className="w-full big-btn-blue h-[58px] rounded-[10px] text-white font-semibold text-[20px] flex items-center justify-center gap-2 shadow-box active:scale-[0.98] transition-transform disabled:opacity-70 disabled:cursor-not-allowed"
           >
                 <Icon
                 name="solar--arrow-left-broken"
                 className="rotate-180 w-6 h-6"
                 size={26}
                 />
-            ادامه فرآیند
-          </Link>
+            {isSubmitting ? "در حال ارسال..." : "ادامه فرآیند"}
+          </button>
+          {submitError && (
+            <span className="text-red-500 text-xs mt-2 px-1">{submitError}</span>
+          )}
         </div>
       )}
     </div>

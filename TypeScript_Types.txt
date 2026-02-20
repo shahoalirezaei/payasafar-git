@@ -1,0 +1,16 @@
+TypeScript Types & Interfaces
+
+ResultStatus: ‘Success’ | ‘Error’ | ‘Warning’ | ‘NotFound’
+
+ResultBase: { status?: ResultStatus; code?: string; message?: string;
+data?: T; payload?: T; listPayload?: T[]; isSuccess?: boolean; }
+
+Auth: SendOtpRequest { mobile: string } VerifyOtpRequest { mobile:
+string; otpCode: string } VerifyUserModel { token: string; userName:
+string; userId: number; isAdmin: boolean; roleCode: number; }
+
+Seat: { number: number; column: number; row: number; status: “Available”
+| “BookedForMale” | “BookedForFemale” }
+
+Includes: Bus, TripServiceModel, Company, PassengerInfoDto,
+ReserveTicketModel, BusSummary, GetListBusSummariesQuery

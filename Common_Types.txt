@@ -1,0 +1,10 @@
+Common Types
+
+ResultStatus: ‘Success’ | ‘Error’ | ‘Warning’ | ‘NotFound’
+
+ResultBase: { status?: ResultStatus; code?: string; message?: string;
+data?: T; payload?: T; listPayload?: T[]; isSuccess?: boolean; }
+
+Domain Models include: CityDto Station Seat Financial Bus ChairLayout
+ResponseBuyTicket BusSummary APIType PassengerInfoDto ReserveTicketModel
+VerifyUserModel

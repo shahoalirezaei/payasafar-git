@@ -7,16 +7,13 @@ const apiBase = axios.create({
   },
 });
 
-// توکن موقتی که فرستادی
-const TEMP_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxMTU0Njk3IiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbW9iaWxlcGhvbmUiOiIwOTE5MDk3MzQ3MCIsInJvbGUiOiIwIiwidW5pcXVlX25hbWUiOiLYtNin2YfZiCIsIm5iZiI6MTc3MTUyNzM4NywiZXhwIjoxNzcxNTMwOTg3LCJpYXQiOjE3NzE1MjczODcsImlzcyI6IlBheWFuZWhhVGlja2V0IiwiYXVkIjoiUGF5YW5laGFUaWNrZXQifQ.43EsZzFuasO8EUq7gFWj5Dt0PyvfU6BHhWrpFDLnEFs";
+// طبق درخواست پروژه: احراز هویت سمت کاربر پیاده نشده و باید همیشه از توکن هارد استفاده شود.
+const HARD_TOKEN =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0LXVzZXItaWQiLCJ1bmlxdWVfbmFtZSI6IkRldmVsb3BlclRlc3QiLCJyb2xlIjoiQWRtaW4iLCJleHAiOjE3NzQxNzc2NDUsImlzcyI6IlBheWFuZWhhVGlja2V0IiwiYXVkIjoiUGF5YW5laGFUaWNrZXQifQ.42l_onehuITJzxaVNve7zIekpJ113Gl9gX3_C3WbvGY";
 
 apiBase.interceptors.request.use((config) => {
-  if (typeof window !== "undefined") {
-    // اولویت با توکنی است که در localStorage ذخیره شده، در غیر این صورت از توکن موقت استفاده کن
-    const token = localStorage.getItem("token") || TEMP_TOKEN;
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+  if (HARD_TOKEN) {
+    config.headers.Authorization = `Bearer ${HARD_TOKEN}`;
   }
   return config;
 });

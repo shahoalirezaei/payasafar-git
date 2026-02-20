@@ -1,0 +1,20 @@
+Purchase Flow
+
+0)  Authentication (if needed) POST /api/Auth/LoginOtp POST
+    /api/Auth/VerifyOtpCode Authorization: Bearer
+
+1)  Search Service GET /api/Trip/GetListBusSummary Params: srcCode,
+    destCode, dt
+
+2)  Service Detail & Seat Map GET /api/Buy/GetServiceDetail Params:
+    busId, serviceId, tokenCompany, sellerId, tripId, srcCode, destCode
+
+3)  Passenger List (optional) GET /api/Buy/GetListPassengerInfo
+
+4)  Register Purchase POST /api/Buy/SaleTicketsNew
+
+5)  Payment (if needed) POST /api/Payment/SendRequestPayment Body: {
+    “price”: number }
+
+Order: Login → GetListBusSummary → GetServiceDetail →
+GetListPassengerInfo → SaleTicketsNew → SendRequestPayment

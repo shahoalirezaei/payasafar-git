@@ -1,0 +1,24 @@
+Authorization - Authentication & JWT
+
+Mechanism: System uses JWT (Bearer Token).
+
+Header: Authorization: Bearer
+
+JWT Config (appsettings.json): - Jwt:Secret - Jwt:Issuer - Jwt:Audience
+
+Token Expiration: DateTime.UtcNow.AddHours(1) Access Token Validity: 1
+hour (UTC)
+
+OTP Flow: 1) POST /api/Auth/LoginOtp Body: { “mobile”: “09123456789” }
+
+2)  POST /api/Auth/VerifyOtpCode Body: { “mobile”: “09123456789”,
+    “otpCode”: “12345” }
+
+Response: { “token”: “…”, “expireAt”: “2026-02-15T15:38:00Z” }
+
+Axios Interceptor Example: axios.interceptors.request.use((config) => {
+const token = localStorage.getItem(“token”); if (token) {
+config.headers.Authorization = Bearer ${token}; } return config; });
+
+401 Handling: HTTP 401 Unauthorized Reasons: - Token removed - Token
+expired - Auth state reset
